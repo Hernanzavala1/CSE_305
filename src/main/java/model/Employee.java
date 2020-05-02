@@ -15,7 +15,8 @@ public class Employee {
 	private String city; 
 	private String state; 
 	private int zipCode; 
-	private String email; 
+	private String email;
+	private String password;
 	private String SSN;
 	private Boolean isManager;
 	
@@ -72,6 +73,12 @@ public class Employee {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public Boolean getIsManager() {
 		return isManager;

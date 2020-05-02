@@ -56,6 +56,7 @@ public class AddEmployeeController extends HttpServlet {
 		
 		Employee employee = new Employee();
 		employee.setEmail(email);
+		employee.setPassword(password);
 		employee.setFirstName(firstName);
 		employee.setLastName(lastName);
 		employee.setAddress(address);

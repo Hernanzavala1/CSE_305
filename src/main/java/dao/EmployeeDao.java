@@ -1,7 +1,13 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;  
 
 import model.Customer;
 import model.Employee;
@@ -21,9 +27,54 @@ public class EmployeeDao {
 		 * You need to handle the database insertion of the employee details and return "success" or "failure" based on result of the database insertion.
 		 */
 		
-		/*Sample data begins*/
-		return "success";
-		/*Sample data ends*/
+		/*data begins*/
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("INSERT INTO Person(FirstName, LastName, Address, City, State, ZipCode, Password, Email, Role) VALUES(?,?,?,?,?,?,?,?,?);");
+			statement.setString(1, employee.getFirstName());
+			statement.setString(2, employee.getLastName());
+			statement.setString(3, employee.getAddress());
+			statement.setString(4, employee.getCity());
+			statement.setString(5, employee.getState());
+			statement.setInt(6, employee.getZipCode());
+			statement.setString(7, employee.getPassword());
+			statement.setString(8, employee.getEmail());
+			if(employee.getIsManager()) {
+				statement.setString(9, "Manager");
+			}
+			else {
+				statement.setString(9, "Employee");
+			}
+			statement.executeUpdate();
+			
+			statement = con.prepareStatement("SELECT * FROM Person WHERE Email = ?");
+			statement.setString(1, employee.getEmail());
+			ResultSet rs = statement.executeQuery();
+			rs.next();
+			int id = rs.getInt("Id");
+			
+			statement = con.prepareStatement("INSERT INTO Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES(?,?,?,?,?);");
+			statement.setInt(1, id);
+			statement.setString(2, employee.getSSN());
+			if(employee.getIsManager()) {
+				statement.setInt(3, 1);
+			}
+			else {
+				statement.setInt(3, 0);
+			}
+			Date conv = Date.valueOf(employee.getStartDate());  
+			statement.setDate(4, conv);
+			statement.setDouble(5, employee.getHourlyRate());
+			statement.executeUpdate();
+			
+			return "success";
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			return "failure";
+		}
+		/*data ends*/
 
 	}
 

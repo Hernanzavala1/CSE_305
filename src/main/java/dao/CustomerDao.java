@@ -162,9 +162,44 @@ public class CustomerDao {
 		 * You need to handle the database insertion of the customer details and return "success" or "failure" based on result of the database insertion.
 		 */
 		
-		/*Sample data begins*/
-		return "success";
-		/*Sample data ends*/
+		/*data begins*/
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("INSERT INTO Person(FirstName, LastName, Address, City, State, ZipCode, Password, Email, Role) VALUES(?,?,?,?,?,?,?,?,?);");
+			statement.setString(1, customer.getFirstName());
+			statement.setString(2, customer.getLastName());
+			statement.setString(3, customer.getAddress());
+			statement.setString(4, customer.getCity());
+			statement.setString(5, customer.getState());
+			statement.setInt(6, customer.getZipCode());
+			statement.setString(7, customer.getPassword());
+			statement.setString(8, customer.getEmail());
+			statement.setString(9, "Customer");
+			statement.executeUpdate();
+			
+			statement = con.prepareStatement("SELECT * FROM Person WHERE Email = ?");
+			statement.setString(1, customer.getEmail());
+			ResultSet rs = statement.executeQuery();
+			rs.next();
+			int id = rs.getInt("Id");
+			
+			statement = con.prepareStatement("INSERT INTO Customer(Id, CreditCardNo, CreationDate, Rating) VALUES(?,?,?,?);");
+			statement.setInt(1, id);
+			statement.setString(2, customer.getCreditCard());
+			long d = System.currentTimeMillis();
+			Date date = new Date(d);
+			statement.setDate(3, date);
+			statement.setInt(4, customer.getRating());
+			statement.executeUpdate();
+			
+			return "success";
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			return "failure";
+		}
+		/*data ends*/
 
 	}
 

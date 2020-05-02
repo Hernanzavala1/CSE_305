@@ -40,7 +40,7 @@
 	    <input type="text" class="form-control" id="employeeFirstName" name="employeeFirstName" placeholder="First Name" required>
 	  </div>
   	  <div class="form-group">
-	    <label for="employeeLastName">last Name</label>
+	    <label for="employeeLastName">Last Name</label>
 	    <input type="text" class="form-control" id="employeeLastName" name="employeeLastName" placeholder="Last Name" required>
 	  </div>
    	  <div class="form-group">
