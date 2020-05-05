@@ -42,7 +42,7 @@ public class UpdateCustomerController extends HttpServlet {
 		String address = request.getParameter("customerAddress");
 		String city = request.getParameter("customerCity");
 		String state= request.getParameter("customerState");
-		int zipcode = Integer.parseInt(request.getParameter("customerZipcode"));
+		String zipcode = request.getParameter("customerZipcode");
 		int accountNo = Integer.parseInt(request.getParameter("accountNo"));
 		String creditCard = request.getParameter("customerCreditCard");
 		int rating = Integer.parseInt(request.getParameter("customerRating"));

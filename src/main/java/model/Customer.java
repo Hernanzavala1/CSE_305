@@ -13,7 +13,7 @@ public class Customer {
 	private String Address;
 	private String City;
 	private String State;
-	private int zipCode;
+	private String zipCode;
 	private String creditCard;
 	private int rating;
 	private String email;
@@ -49,10 +49,10 @@ public class Customer {
 	public void setState(String state) {
 		State = state;
 	}
-	public int getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
-	public void setZipCode(int zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 	public String getEmail() {

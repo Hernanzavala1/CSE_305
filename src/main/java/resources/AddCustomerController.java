@@ -46,7 +46,7 @@ public class AddCustomerController extends HttpServlet {
 		String address = request.getParameter("customerAddress");
 		String city = request.getParameter("customerCity");
 		String state= request.getParameter("customerState");
-		int zipcode = Integer.parseInt(request.getParameter("customerZipcode"));
+		String zipcode = request.getParameter("customerZipcode");
 //		String telephone = request.getParameter("customerTelephone");
 //		String ssn = request.getParameter("customerSSN");
 		String creditCard = request.getParameter("customerCreditCard");

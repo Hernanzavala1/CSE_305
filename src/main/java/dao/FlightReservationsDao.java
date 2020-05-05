@@ -1,8 +1,14 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Customer;
 import model.FlightReservations;
 
 public class FlightReservationsDao {
@@ -100,23 +106,32 @@ public class FlightReservationsDao {
 		 */
 		
 		List<FlightReservations> reservations = new ArrayList<FlightReservations>();
-			
-		/*Sample data begins*/
-		for (int i = 0; i < 4; i++) {
-			FlightReservations reservation = new FlightReservations();
-			
-			reservation.setResrNo(111);
-			reservation.setResrDate("2011-01-01");
-			reservation.setTotalFare(150.22); 
-			reservation.setBookingFee(10.12);
-			reservation.setRepSSN("198498472");
-			reservation.setAccountNo(accountNo);
-	
-			reservations.add(reservation);
-				
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM Reservation R WHERE EXISTS (SELECT * FROM Includes I, Leg L WHERE R.ResrNo = I.ResrNo AND I.AirlineID = L.AirlineID AND I.FlightNo = L.FlightNo AND L.DepTime >= NOW()) AND R.AccountNo = ?");
+			statement.setInt(1, accountNo);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				FlightReservations reservation = new FlightReservations();
+				reservation.setResrNo(rs.getInt("ResrNo"));
+				Date dateObj = rs.getDate("ResrDate");
+		        String date = dateObj.toString();
+				reservation.setResrDate(date);
+				reservation.setTotalFare(rs.getDouble("TotalFare")); 
+				reservation.setBookingFee(rs.getDouble("BookingFee"));
+				reservation.setRepSSN(rs.getString("RepSSN"));
+				reservation.setAccountNo(accountNo);
+		
+				reservations.add(reservation);
+			}
 		}
-		/*Sample data ends*/
-						
+		catch(Exception e) {
+			System.out.println(e);
+			return null;
+		}
+
 		return reservations;
 		
 	}
@@ -131,18 +146,29 @@ public class FlightReservationsDao {
 		List<FlightReservations> reservations = new ArrayList<FlightReservations>();
 			
 		/*Sample data begins*/
-		for (int i = 0; i < 4; i++) {
-			FlightReservations reservation = new FlightReservations();
-			
-			reservation.setResrNo(111);
-			reservation.setResrDate("2011-01-01");
-			reservation.setTotalFare(150.22); 
-			reservation.setBookingFee(10.12);
-			reservation.setRepSSN("198498472");
-			reservation.setAccountNo(accountNo);
-	
-			reservations.add(reservation);
-				
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM Reservation WHERE AccountNo = ?;");
+			statement.setInt(1, accountNo);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				FlightReservations reservation = new FlightReservations();
+				reservation.setResrNo(rs.getInt("ResrNo"));
+				Date dateObj = rs.getDate("ResrDate");
+		        String date = dateObj.toString();
+				reservation.setResrDate(date);
+				reservation.setTotalFare(rs.getDouble("TotalFare")); 
+				reservation.setBookingFee(rs.getDouble("BookingFee"));
+				reservation.setRepSSN(rs.getString("RepSSN"));
+				reservation.setAccountNo(accountNo);
+		
+				reservations.add(reservation);
+			}
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			return null;
 		}
 		/*Sample data ends*/
 						

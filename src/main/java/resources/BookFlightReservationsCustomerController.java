@@ -78,24 +78,29 @@ public class BookFlightReservationsCustomerController extends HttpServlet {
 		bookRes.setTypeOfTrip(typeOfTrip);
 		bookRes.setRepSSN(repSSN);
 		
-		BookReservationDao bookResDao = new BookReservationDao();
-		String result = bookResDao.bookOneWayRoundTripReservation(bookRes);
-		
-		if(result.equals("success")) {
-			if(isEmployee == true) {
-				response.sendRedirect("customerRepresentativeHome.jsp?status=insertSuccess");
+		try {
+			BookReservationDao bookResDao = new BookReservationDao();
+			String result = bookResDao.bookOneWayRoundTripReservation(bookRes);
+			
+			if(result.equals("success")) {
+				if(isEmployee == true) {
+					response.sendRedirect("customerRepresentativeHome.jsp?status=insertSuccess");
+				}
+				else {
+				response.sendRedirect("home.jsp?status=insertSuccess");
+				}
 			}
 			else {
-			response.sendRedirect("home.jsp?status=insertSuccess");
+				if(isEmployee == true) {
+					response.sendRedirect("customerRepresentativeHome.jsp?status=insertFailure");
+				}
+				else {
+				response.sendRedirect("home.jsp?status=insertFailure");
+				}
 			}
 		}
-		else {
-			if(isEmployee == true) {
-				response.sendRedirect("customerRepresentativeHome.jsp?status=insertFailure");
-			}
-			else {
-			response.sendRedirect("home.jsp?status=insertFailure");
-			}
+		catch(Exception e){
+			System.out.println(e);
 		}
 		
 	}

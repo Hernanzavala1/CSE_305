@@ -14,7 +14,7 @@ public class Employee {
 	private String address; 
 	private String city; 
 	private String state; 
-	private int zipCode; 
+	private String zipCode; 
 	private String email;
 	private String password;
 	private String SSN;
@@ -62,10 +62,10 @@ public class Employee {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public int getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
-	public void setZipCode(int zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 	public String getEmail() {
