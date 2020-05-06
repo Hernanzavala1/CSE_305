@@ -23,8 +23,10 @@
 	<title>Reservation Details</title>
 </head>
 <body class="container"><br>
-
-	<h1>The Flight Reservations are:</h1>
+<nav>
+	<h1 style = "text-align: center;"> <u>The Flight Reservations are:</u></h1>
+</nav>
+<br>
 	<div class="container">
 	<c:if test="${empty reservations}">
 		<h3> Flight Reservations not found! <h3/> 

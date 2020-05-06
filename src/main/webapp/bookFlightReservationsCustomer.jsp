@@ -21,8 +21,10 @@
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 	</head>
 	<body>
-	
-		<h1>Book Reservations:</h1>
+	<nav>
+		<h1 style = "text-align: center;"> <u>Book Reservations:</u></h1>
+	</nav>
+		<br>
 		<div class="container">
 			<h2>Booking:</h2>
 			<div class="row">

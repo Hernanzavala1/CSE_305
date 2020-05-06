@@ -24,8 +24,11 @@
 	<title>Customer Details</title>
 </head>
 <body>
+<nav>
+	<h1 style = "text-align: center;"> <u>The Customer Details are:</u></h1>
+</nav>
+<br>
 	<div>
-	<h1>The Customer Details are:</h1>
 	<c:if test="${empty customers}">
 		<h3> Customer details not found! <h3/> 
 	</c:if>

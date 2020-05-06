@@ -23,8 +23,10 @@
 	<title>Employee Details</title>
 </head>
 <body class="container"><br>
-
-	<h1>The Employee Details are:</h1><br>
+<nav>
+	<h1 style = "text-align: center;"> <u>The Employee Details are:</u></h1>
+</nav>
+	<br>
 	<div class="container">
 	<c:if test="${empty employees}">
 		<h3> Employee details not found! <h3/> 

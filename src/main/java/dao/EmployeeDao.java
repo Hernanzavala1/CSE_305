@@ -362,12 +362,32 @@ public class EmployeeDao {
 		
 		Employee employee = new Employee();
 		
-		/*Sample data begins*/
-		// EmployeeID = SSN
-		employee.setSSN("6314135555");
-		/*Sample data ends*/
-		
-		return employee;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("CREATE VIEW CRRevenue(SSN, TotalRevenue) AS SELECT RepSSN, SUM(TotalFare * 0.1) FROM Reservation WHERE RepSSN IS NOT Null GROUP BY RepSSN;");
+			statement.executeUpdate();
+			statement = con.prepareStatement("SELECT SSN FROM CRRevenue WHERE TotalRevenue >= (SELECT MAX(TotalRevenue) FROM CRRevenue)");
+			statement.executeQuery();
+			ResultSet rs = statement.executeQuery();
+			if(!rs.next()) {
+				System.out.println("No employee generated revenue");
+				statement = con.prepareStatement("DROP VIEW CRRevenue;");
+				statement.executeUpdate();
+				return employee;
+				
+			}
+			else{
+				employee.setSSN(rs.getString("SSN"));
+				statement = con.prepareStatement("DROP VIEW CRRevenue;");
+				statement.executeUpdate();
+				return employee;
+			}
+		}
+		catch(Exception e){
+			System.out.print(e);
+			return null;
+		}
 	}
 
 	public String getEmployeeID(String username) {
@@ -380,7 +400,7 @@ public class EmployeeDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
-			PreparedStatement statement = con.prepareStatement("SELECT * FROM Person WHERE Role = 'Employee' AND Email = ?;");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM Person WHERE Role = 'Employee' OR Role = 'Manager' AND Email = ?;");
 			statement.setString(1, username);
 			ResultSet rs = statement.executeQuery();
 			if (!rs.next()){

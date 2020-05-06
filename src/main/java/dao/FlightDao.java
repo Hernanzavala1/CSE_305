@@ -48,15 +48,28 @@ public class FlightDao {
 		
 		List<Flight> flights = new ArrayList<Flight>();
 		
-		for (int i = 0; i < 5; i++) {
-			Flight flight = new Flight();
-			flight.setAirlineID("AA");
-			flight.setFlightNo(111);
-			flight.setNumReservations(30);
-			flights.add(flight);			
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("CREATE VIEW FlightReservation(AirlineID, FlightNo, ResrCount) AS SELECT I.AirlineID, I.FlightNo, COUNT(DISTINCT I.ResrNo) FROM Includes I GROUP BY I.AirlineID, I.FlightNo;");
+			statement.executeUpdate();
+			
+			statement = con.prepareStatement("SELECT * FROM FlightReservation WHERE ResrCount >= (SELECT MAX(ResrCount) FROM FlightReservation);"); 
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				Flight flight = new Flight();
+				flight.setAirlineID(rs.getString("AirlineID"));
+				flight.setFlightNo(rs.getInt("FlightNo"));
+				flight.setNumReservations(rs.getInt("ResrCount"));
+				flights.add(flight);	
+			}
+			statement = con.prepareStatement("DROP VIEW FlightReservation;"); 
+			statement.executeUpdate();
 		}
-		/*Sample data ends*/
-		
+		catch(Exception e) {
+			System.out.println(e);
+			return null;
+		}
 		return flights;
 	}
 	
@@ -68,18 +81,27 @@ public class FlightDao {
 		
 		List<Flight> flights = new ArrayList<Flight>();
 		
-		for (int i = 0; i < 5; i++) {
-			Flight flight = new Flight();
-			flight.setAirlineID("AA");
-			flight.setFlightNo(111);
-			flight.setNumOfSeats(100);
-			flight.setDaysOperating("1010100");
-			flight.setMinLengthOfStay(1);
-			flight.setMaxLengthOfStay(30);
-			flights.add(flight);			
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("SELECT DISTINCT F.* FROM Flight F, Leg L, Airport A WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo AND (L.DepAirportId = A.Id OR L.ArrAirportId = A.Id) AND A.Name = ?;");
+			statement.setString(1, airport);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				Flight flight = new Flight();
+				flight.setAirlineID(rs.getString("AirlineID"));
+				flight.setFlightNo(rs.getInt("FlightNo"));
+				flight.setNumOfSeats(rs.getInt("NoOfSeats"));
+				flight.setDaysOperating(rs.getString("DaysOperating"));
+				flight.setMinLengthOfStay(rs.getInt("MinLengthOfStay"));
+				flight.setMaxLengthOfStay(rs.getInt("MaxLengthOfStay"));
+				flights.add(flight);		
+			}
 		}
-		/*Sample data ends*/
-		
+		catch(Exception e) {
+			System.out.println(e);
+			return null;
+		}
 		return flights;
 	}
 	public List<Flight> getOnTimeFlights() {
@@ -90,18 +112,26 @@ public class FlightDao {
 		
 		List<Flight> flights = new ArrayList<Flight>();
 		
-		for (int i = 0; i < 5; i++) {
-			Flight flight = new Flight();
-			flight.setAirlineID("AA");
-			flight.setFlightNo(111);
-			flight.setNumOfSeats(100);
-			flight.setDaysOperating("1010100");
-			flight.setMinLengthOfStay(1);
-			flight.setMaxLengthOfStay(30);
-			flights.add(flight);			
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM Flight F WHERE NOT EXISTS ( SELECT * FROM Leg L WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo AND (ActualArrTime > ArrTime OR ActualDepTime > DepTime))");
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				Flight flight = new Flight();
+				flight.setAirlineID(rs.getString("AirlineID"));
+				flight.setFlightNo(rs.getInt("FlightNo"));
+				flight.setNumOfSeats(rs.getInt("NoOfSeats"));
+				flight.setDaysOperating(rs.getString("DaysOperating"));
+				flight.setMinLengthOfStay(rs.getInt("MinLengthOfStay"));
+				flight.setMaxLengthOfStay(rs.getInt("MaxLengthOfStay"));
+				flights.add(flight);		
+			}
 		}
-		/*Sample data ends*/
-		
+		catch(Exception e) {
+			System.out.println(e);
+			return null;
+		}
 		return flights;
 	}
 	public List<Flight> getDelayedFlights() {
@@ -110,20 +140,28 @@ public class FlightDao {
 		 * Code here to get delayed flights
 		 */
 		
-		List<Flight> flights = new ArrayList<Flight>();
+List<Flight> flights = new ArrayList<Flight>();
 		
-		for (int i = 0; i < 5; i++) {
-			Flight flight = new Flight();
-			flight.setAirlineID("AA");
-			flight.setFlightNo(111);
-			flight.setNumOfSeats(100);
-			flight.setDaysOperating("1010100");
-			flight.setMinLengthOfStay(1);
-			flight.setMaxLengthOfStay(30);
-			flights.add(flight);			
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM Flight F WHERE EXISTS ( SELECT * FROM Leg L WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo AND (ActualArrTime > ArrTime OR ActualDepTime > DepTime))");
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				Flight flight = new Flight();
+				flight.setAirlineID(rs.getString("AirlineID"));
+				flight.setFlightNo(rs.getInt("FlightNo"));
+				flight.setNumOfSeats(rs.getInt("NoOfSeats"));
+				flight.setDaysOperating(rs.getString("DaysOperating"));
+				flight.setMinLengthOfStay(rs.getInt("MinLengthOfStay"));
+				flight.setMaxLengthOfStay(rs.getInt("MaxLengthOfStay"));
+				flights.add(flight);		
+			}
 		}
-		/*Sample data ends*/
-		
+		catch(Exception e) {
+			System.out.println(e);
+			return null;
+		}
 		return flights;
 	}
 	

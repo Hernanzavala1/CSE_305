@@ -23,9 +23,12 @@
 	<script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<nav>
+	<h1 style = "text-align: center;"> <u>Edit Employee:</u></h1>
+</nav>
+<br>
 	<div class="container">
-	
-	<h1>Edit Employee:</h1>
+
 	<c:if test="${empty editEmployee}">
 		<h3> Employee details not found! <h3/> 
 	</c:if>

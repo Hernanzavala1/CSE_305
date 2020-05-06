@@ -15,9 +15,11 @@
 		<title>Customer Home</title>
 	</head>
 	<body>
+	<nav>
+		<h1 style = "text-align: center;"> <u>Welcome to the Online Travel Reservation System! </u></h1>
+	</nav>
 	
-		<h1>Welcome to the Online Travel Reservation System!</h1>
-		<div class="container">
+		<div style = "margin-top: 30px;" class="container">
 			<h2>Customer Options:</h2>
 			<%
 			String email = (String)session.getAttribute("email");
@@ -38,12 +40,12 @@
 			}
 			%>
 			
-			<div class="row">
+			<div style = "margin-top: 50px;" class="row">
 				<div class="col">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">Reservations</h5>
-    					<div class="container">
+					    <h5 style = "text-align: center;" class="card-title">Reservations</h5>
+    					<div style = "text-align: center;" class="container">
 							<form action="getCustomerCurrentReservations">
 								<input type="submit" value="Current Reservations" class="btn btn-success"/>
 							</form>
@@ -57,8 +59,8 @@
 				<div class="col">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">Book Reservations</h5>
-    					<div class="container">
+					    <h5 style = "text-align: center;" class="card-title">Book Reservations</h5>
+    					<div style = "text-align: center;" class="container">
 							<form action="bookFlightReservationsCustomer">
 								<input type="submit" value="Book Reservation" class="btn btn-success"/>
 							</form>
@@ -69,8 +71,8 @@
 				<div class="col">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">Reverse Auctions</h5>
-    					<div class="container">
+					    <h5 style = "text-align: center;" class="card-title">Reverse Auctions</h5>
+    					<div style = "text-align: center;" class="container">
 							<form action="getReverseAuctions">
 								<input type="submit" value="Reverse Auctions" class="btn btn-success"/>
 							</form>
@@ -114,10 +116,15 @@
 					  </div>
 					</div>
 				</div> -->
-				<div class="col">
+				
+		</div>
+		<br>
+		
+		<div style = "text-align: center;" class="row">
+			<div class="col">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">View Best Seller Flights</h5>
+					    <h5 style = "text-align: center;" class="card-title">View Best Seller Flights</h5>
     					<div class="container">
 							<form action="getBestsellersForCustomer">
 								<input type="submit" value="View Best Sellers" class="btn btn-success"/>
@@ -126,21 +133,23 @@
 					  </div>
 					</div>
 				</div>
+				<br>
 				<div class="col">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">Personalized Flight Suggestions</h5>
-    					<div class="container">
-							<form action="personalizedSuggestions">
+					    <h5 style = "text-align: center;" class="card-title">Personalized Flight Suggestions</h5>
+    					<div style = "text-align: center;" class="container">
+							<form style = "display: inline-block;" action="personalizedSuggestions">
 								<input type="submit" value="View Personalized Suggestions" class="btn btn-success"/>
 							</form>
 						</div>
 					  </div>
 					</div>
 				</div>
-				
-		</div>
-		<div class="container">
+			</div>
+		
+		
+		<div style = "margin-top: 10px;" class="container">
 			<form action="logout">
 				<input type="submit" value="Logout" class="btn btn-danger"/>
 			</form>

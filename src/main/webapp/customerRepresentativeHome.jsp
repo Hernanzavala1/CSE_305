@@ -15,8 +15,10 @@
 		<title>Customer Representative Home</title>
 	</head>
 	<body class="container">
-	
-		<h1>Welcome to the Online Travel Reservation System!</h1>
+	<nav>
+		<h1 style = "text-align: center;"> <u>Welcome to the Online Travel Reservation System! </u></h1>
+	</nav>
+	<br>
 		<div class="container">
 			<h2>Customer Representative Options:</h2>
 			<%
@@ -37,8 +39,8 @@
 					response.sendRedirect("index.jsp");
 				}
 			%>
-			
-			<div class="row">
+			<br>
+			<div style = "text-align: center;" class="row">
 				<div class="col">
 					<div class="card">
 					  <div class="card-body">

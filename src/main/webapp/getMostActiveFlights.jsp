@@ -17,8 +17,10 @@
 	<title>Most Active Flights</title>
 </head>
 <body>
-
-	<h1>The Most Active Flights are:</h1>
+<nav>
+	<h1 style = "text-align: center;"> <u>The Most Active Flights are:</u></h1>
+</nav>
+		<br>
 	<div class="container">
 	<c:if test="${empty items}">
 		<h3>Items not found!</h3> 

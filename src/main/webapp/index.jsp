@@ -16,9 +16,10 @@
 		<title>Login | Online Travel Reservation System</title>
 	</head>
 	<body>
-	
-		<h1>Welcome to Online Travel Reservation System</h1>
-		<div class="container">
+	<nav>
+		<h1 style = "text-align: center;"> <u>Welcome to the Online Travel Reservation System! </u></h1>
+	</nav>
+		<div style = "margin-top: 50px;"class="container">
 			<h2>Login</h2>
 			<%
 				String email = (String)session.getAttribute("email");

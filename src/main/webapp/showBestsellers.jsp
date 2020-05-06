@@ -18,7 +18,10 @@
 </head>
 <body class="container">
 <br>
-	<h1>Best Sellers are:</h1>
+<nav>
+	<h1 style = "text-align: center;"> <u>Best Sellers are: </u></h1>
+</nav>
+	<br>
 	<div class="container">
 	<c:if test="${empty items}">
 		<h3>Items not found!</h3> 

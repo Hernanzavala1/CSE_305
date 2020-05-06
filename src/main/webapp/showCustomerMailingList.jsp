@@ -24,7 +24,9 @@
 	<title>Customer Mailing List</title>
 </head>
 <body class="container"><br>
-	<h1>Customer Mailing List:</h1>
+<nav>
+	<h1 style = "text-align: center;"> <u>Customer Mailing List:</u></h1>
+</nav>
 	<br/>
 	<div class="container">
 	<h3>The Customer Details are:</h3>

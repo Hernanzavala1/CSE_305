@@ -23,10 +23,12 @@
 	<title>Highest Revenue Customer Details</title>
 </head>
 <body class="container"><br>
-
+<nav>
+	<h1 style = "text-align: center;"> <u>The Customer that generated the highest revenue is:</u></h1>
+</nav>
+		<br>
 	
 	<div class="container">
-	<h3>The Customer that generated the highest revenue is:</h3>
 	<c:if test="${empty customer}">
 		<h3> Customer details not found! <h3/> 
 	</c:if>

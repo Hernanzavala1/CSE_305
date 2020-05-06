@@ -21,8 +21,10 @@
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 	</head>
 	<body class="container">
+	<nav>
+	<h1 style = "text-align: center;"> <u>Search Flights:</u></h1>
+</nav>
 		<br>
-		<h1>Search Flights:</h1>
 		<div class="container"><br>
 			<h2>Search Options:</h2>
 			<div class="row">

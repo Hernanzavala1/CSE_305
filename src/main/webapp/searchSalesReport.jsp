@@ -21,7 +21,10 @@
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 	</head>
 	<body class="container"><br>
-		<h1>Sales Report</h1><br>
+	<nav>
+		<h1 style = "text-align: center;"> <u>Sales Report:</u></h1>
+	</nav>
+	<br>
 		<div class="container">
 			<h2>Select Month and Year</h2><br>
 			<form action="getSalesReport">

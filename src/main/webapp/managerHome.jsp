@@ -15,12 +15,9 @@
 		<title>Manager Home</title>
 	</head>
 	<body class="container">
-	<br>
-	<br>
-	<br>
-	
-		<h1>Welcome to the Online Travel Reservation System!</h1>
-		
+	<nav>
+		<h1 style = "text-align: center;"> <u>Welcome to the Online Travel Reservation System! </u></h1>
+	</nav>
 		<br>
 		<div class="container">
 			<h2>Manager Options:</h2>
@@ -44,7 +41,7 @@
 
 			%>
 			
-			<div class="row">
+			<div style = "text-align: center;" class="row">
 				<div class="col">
 					<div class="card">
 					  <div class="card-body">
@@ -109,6 +106,10 @@
 					  </div>
 					</div>
 				</div>
+				
+			</div>
+			<br>
+			<div style = "text-align: center;" class="row">
 				<div class="col">
 					<div class="card">
 					  <div class="card-body">
@@ -150,20 +151,18 @@
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
-					  <div class="card-body">
-					    <h5 class="card-title">View Most Active Flights</h5>
-    					<div class="container">
-							<form action="getMostActiveFlights">
-								<input type="submit" value="View Most Active Flights" class="btn btn-primary"/>
-							</form>
+						<div class="card">
+						  <div class="card-body">
+						    <h5 class="card-title">View Most Active Flights</h5>
+	    					<div class="container">
+								<form action="getMostActiveFlights">
+									<input type="submit" value="View Most Active Flights" class="btn btn-primary"/>
+								</form>
+							</div>
+						  </div>
 						</div>
-					  </div>
 					</div>
-				</div>
-				
 			</div>
-			
 			
 		</div>
 		<div class="container">

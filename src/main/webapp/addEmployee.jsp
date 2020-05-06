@@ -22,9 +22,11 @@
 	<script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body class="container">
+<nav>
+	<h1 style = "text-align: center;"> <u>Add a new Employee:</u></h1>
+</nav>
+<br>
 	<div>
-	
-	<h1>Add a new Employee:</h1>
  
 	<form action="addEmployee" method="POST">
 	  <div class="form-group">

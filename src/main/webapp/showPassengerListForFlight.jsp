@@ -17,8 +17,10 @@
 	<title>Passenger List for Flights</title>
 </head>
 <body class="container">
-
-	<h1>Passenger List for the flight is:</h1>
+<nav>
+	<h1 style = "text-align: center;"> <u>Passenger List for the flight is:</u></h1>
+</nav>
+		<br>
 	<div class="container">
 	<c:if test="${empty items}">
 		<h3>Items not found!</h3> 

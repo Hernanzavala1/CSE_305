@@ -23,8 +23,10 @@
 	<title>Revenue Details</title>
 </head>
 <body class="container"><br>
-
-	<h1>The Reservation Revenues are:</h1>
+<nav>
+	<h1 style = "text-align: center;"> <u>The Reservation Revenues are:</u></h1>
+</nav>
+		<br>
 	<div class="container">
 	<c:if test="${empty reservations}">
 		<h3> Revenues not found! <h3/> 

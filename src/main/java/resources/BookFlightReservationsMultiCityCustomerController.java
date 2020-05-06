@@ -78,18 +78,29 @@ public class BookFlightReservationsMultiCityCustomerController extends HttpServl
 //		bookRes.setTypeOfFlight(typeOfFlight);
 		bookRes.setRepSSN(repSSN);
 		
-		BookReservationDao bookResDao = new BookReservationDao();
-		String result = bookResDao.bookMultiCityReservation(bookRes);
-		
-		if(result.equals("success")) {
-			if(isEmployee == true) {
-				response.sendRedirect("customerRepresentativeHome.jsp?status=insertSuccess");
+		try {
+			BookReservationDao bookResDao = new BookReservationDao();
+			String result = bookResDao.bookMultiCityReservation(bookRes);
+			
+			if(result.equals("success")) {
+				if(isEmployee == true) {
+					response.sendRedirect("customerRepresentativeHome.jsp?status=insertSuccess");
+				}
+				else {
+				response.sendRedirect("home.jsp?status=insertSuccess");
+				}
 			}
 			else {
-			response.sendRedirect("home.jsp?status=insertSuccess");
+				if(isEmployee == true) {
+					response.sendRedirect("customerRepresentativeHome.jsp?status=insertFailure");
+				}
+				else {
+				response.sendRedirect("home.jsp?status=insertFailure");
+				}
 			}
 		}
-		else {
+		catch(Exception e) {
+			System.out.println(e);
 			if(isEmployee == true) {
 				response.sendRedirect("customerRepresentativeHome.jsp?status=insertFailure");
 			}

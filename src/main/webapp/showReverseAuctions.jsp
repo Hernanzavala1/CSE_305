@@ -21,8 +21,10 @@
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 	</head>
 	<body>
-	
-		<h1>Reverse Auctions:</h1>
+	<nav>
+		<h1 style = "text-align: center;"> <u>Reverse Auctions: </u></h1>
+	</nav>
+		<br>
 		<div class="container">
 			<h2>View bids:</h2>
 			<div class="row">

@@ -21,8 +21,10 @@
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 	</head>
 	<body class="container">
-	<br>
-		<h1>Search flights:</h1><br>
+	<nav>
+		<h1 style = "text-align: center;"> <u>Search flights:</u></h1>
+	</nav>
+		<br>
 		<div class="container">
 			<h2>Search Options:</h2><br>
 			<div class="row">
@@ -63,7 +65,7 @@
     					<div class="container">
 							<form method="POST" action="searchRevenueSummary">
 								<label for="customerName">Customer Name:</label>
-	    						<input type="text" class="form-control" id="customerName" name="customerName" placeholder="Type Customer Name or a Part of it"><br>
+	    						<input type="text" class="form-control" id="customerName" name="customerName" placeholder="Type Customer Full Name"><br>
 								<input type="submit" value="Search" class="btn btn-primary"/>
 							</form>
 						</div>

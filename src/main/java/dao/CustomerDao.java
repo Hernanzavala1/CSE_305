@@ -104,14 +104,35 @@ public class CustomerDao {
 		/*Sample data begins*/
 		
 		Customer customer = new Customer();
-		// Customer ID = Account Number
-		customer.setAccountNo(111);
-		customer.setLastName("Lu");
-		customer.setFirstName("Shiyong");
-		/*Sample data ends*/
-	
-		return customer;
 		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("CREATE VIEW CustomerRevenue(AccountNo, TotalRevenue) AS SELECT AccountNo, SUM(TotalFare * 0.1) FROM Reservation GROUP BY AccountNo;");
+			statement.executeUpdate();
+			statement = con.prepareStatement("SELECT CR.AccountNo, P.FirstName, P.LastName FROM CustomerRevenue CR, Customer C, Person P WHERE CR.AccountNo = C.AccountNo AND C.Id = P.Id AND CR.TotalRevenue >= (SELECT MAX(TotalRevenue) FROM CustomerRevenue);");
+			statement.executeQuery();
+			ResultSet rs = statement.executeQuery();
+			if(!rs.next()) {
+				System.out.println("No customer generated revenue");
+				statement = con.prepareStatement("DROP VIEW CustomerRevenue;");
+				statement.executeUpdate();
+				return customer;
+				
+			}
+			else{
+				customer.setAccountNo(rs.getInt("AccountNo"));
+				customer.setLastName(rs.getString("LastName"));
+				customer.setFirstName(rs.getString("FirstName"));
+				statement = con.prepareStatement("DROP VIEW CustomerRevenue;");
+				statement.executeUpdate();
+				return customer;
+			}
+		}
+		catch(Exception e){
+			System.out.print(e);
+			return null;
+		}
 	}
 
 	public List<Customer> getCustomerMailingList() {

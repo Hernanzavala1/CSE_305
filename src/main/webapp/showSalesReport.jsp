@@ -23,8 +23,10 @@
 	<title>Sales Report</title>
 </head>
 <body class="container"><br>
+<nav>
+	<h1 style = "text-align: center;"> <u>Sales Report:</u></h1>
+</nav>
 
-	<h1>Sales Report</h1>
 	<div class="container">
 	<c:if test="${empty sales}">
 		<h3>Sales Report not found! <h3/> 

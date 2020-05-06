@@ -569,7 +569,80 @@ public class BookReservationDao {
 		}
 	}
 	
-	public String bookMultiCityReservation(BookReservation bookRes) {
+	public boolean validateDateMultiCity(String trip1Date, String trip2Date, int flight1, int flight2) throws ParseException {
+		java.util.Date DTemp=new SimpleDateFormat("MM/dd/yyyy").parse(trip1Date);  
+		java.util.Date RTemp=new SimpleDateFormat("MM/dd/yyyy").parse(trip2Date);
+
+		Calendar temp = new GregorianCalendar();
+        temp.setTime(DTemp);
+        Calendar temp2 = new GregorianCalendar();
+        temp2.setTime(RTemp);
+		if(temp.compareTo(temp2) > 0) {
+			System.out.println("Trip2 date cannot be before Trip1 date");
+			return false;
+		}
+		
+		boolean trip1DateValid = false;
+		boolean trip2DateValid = false;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM Flight WHERE FlightNo = ?");
+			statement.setInt(1, flight1);
+			ResultSet rs = statement.executeQuery();
+			if(!rs.next()) {
+				System.out.println("Flight1 does not exist");
+				return false;
+			}
+			java.util.Date utilDateD2=new SimpleDateFormat("MM/dd/yyyy").parse(trip1Date);  
+			java.util.Date utilDateR2=new SimpleDateFormat("MM/dd/yyyy").parse(trip2Date);
+			
+			Calendar calendar = Calendar.getInstance();
+	        calendar.setTime(utilDateD2);
+	        int day = calendar.get(Calendar.DAY_OF_WEEK);
+			String days = rs.getString("DaysOperating");
+			for(int i = 0; i < days.length(); i++) {
+				if(i == day-1 && days.charAt(i) != '1') {
+					return false;
+				}
+				if(i > day) {
+					break;
+				}
+			}
+			trip1DateValid = true;
+			
+			statement = con.prepareStatement("SELECT * FROM Flight WHERE FlightNo = ?");
+			statement.setInt(1, flight2);
+			rs = statement.executeQuery();
+			if(!rs.next()) {
+				System.out.println("Flight2 does not exist");
+				return false;
+			}
+			
+			calendar = Calendar.getInstance();
+	        calendar.setTime(utilDateR2);
+	        day = calendar.get(Calendar.DAY_OF_WEEK);
+			days = rs.getString("DaysOperating");
+			for(int i = 0; i < days.length(); i++) {
+				if(i == day-1 && days.charAt(i) != '1') {
+					return false;
+				}
+				if(i > day) {
+					break;
+				}
+			}
+			trip2DateValid = true;
+			
+			return trip1DateValid && trip2DateValid;
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			return false;
+		}
+	}
+	
+	
+	public String bookMultiCityReservation(BookReservation bookRes) throws ParseException {
 		
 		/*
 		 * The students code to fetch data from the database will be written here
@@ -580,8 +653,208 @@ public class BookReservationDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database deletion and return "success" or "failure" based on result of the database deletion.
 		 */
-					
-		return "success";
-		
+		if(!validateAirlineId(bookRes.getAirlineID())) {
+			System.out.println("AirlineID is not valid");
+			return "failure";
+		}
+		if(!validateAirportMulti(bookRes.getDepartureAirport1(), bookRes.getArrivalAirport1()) || !validateAirportMulti(bookRes.getDepartureAirport2(), bookRes.getArrivalAirport2())) {
+			return "failure";
+		}
+		if(!validateDateMultiCity(bookRes.getTrip1Date(), bookRes.getTrip2Date(), bookRes.getFlightNum1(), bookRes.getFlightNum2())) {
+			System.out.println("Flight is not operating on that day");
+			return "failure";
+		}
+		if(!bookRes.getSeatClass().trim().equals("First") && !bookRes.getSeatClass().trim().equals("Economy") && !bookRes.getSeatClass().trim().equals("Basic")) {
+			System.out.println("Seat class must either be: First, Economy, or Basic");
+			return "failure";
+		}
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/jelthomas", "jelthomas", "111360747");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM Fare WHERE AirlineID = ? AND FlightNo = ? AND Class = ?;");
+			statement.setString(1, bookRes.getAirlineID());
+			statement.setInt(2, bookRes.getFlightNum1());
+			statement.setString(3, bookRes.getSeatClass());
+			ResultSet rs = statement.executeQuery();
+			if(!rs.next()) {
+				System.out.println("Fare does not exist for this airline/flight#1/fareType");
+				return "failure";
+			}
+			double fare1 = rs.getDouble("Fare");
+			String repSSN = bookRes.getRepSSN();
+			
+			statement = con.prepareStatement("SELECT * FROM Fare WHERE AirlineID = ? AND FlightNo = ? AND Class = ?;");
+			statement.setString(1, bookRes.getAirlineID());
+			statement.setInt(2, bookRes.getFlightNum2());
+			statement.setString(3, bookRes.getSeatClass());
+			rs = statement.executeQuery();
+			if(!rs.next()) {
+				System.out.println("Fare does not exist for this airline/flight#2/fareType");
+				return "failure";
+			}
+			double fare2 = rs.getDouble("Fare");
+			double fareCombo = fare1 + fare2;
+			double bookingFee = fareCombo * 0.1;
+			double totalFare = fareCombo + bookingFee;
+			
+			
+			statement = con.prepareStatement("SELECT * FROM Person WHERE Email = ?;");
+			statement.setString(1, bookRes.getPassEmail());
+			rs = statement.executeQuery();
+			if(!rs.next()) {
+				System.out.println("That email does not exist!");
+				return "failure";
+			}
+			int customerID = rs.getInt("Id");
+			
+			statement = con.prepareStatement("SELECT * FROM Customer WHERE Id = ?;");
+			statement.setInt(1, customerID);
+			rs = statement.executeQuery();
+			rs.next();
+			int accountNo = rs.getInt("AccountNo");
+			
+			int resrNo = randomResrNo();
+			if(repSSN.equals("")) {
+				statement = con.prepareStatement("INSERT INTO Reservation(ResrNo, ResrDate, BookingFee, TotalFare, AccountNo) VALUES(?,?,?,?,?);");
+				statement.setInt(1, resrNo);
+				long d = System.currentTimeMillis();
+				Date date = new Date(d);
+				statement.setDate(2, date);
+				statement.setDouble(3, bookingFee);
+				statement.setDouble(4, totalFare);
+				statement.setInt(5, accountNo);
+				statement.executeUpdate();
+				
+				statement = con.prepareStatement("SELECT * FROM Leg WHERE AirlineID = ? AND FlightNo = ? AND DepAirportID = ?;");
+				statement.setString(1, bookRes.getAirlineID());
+				statement.setInt(2, bookRes.getFlightNum1());
+				statement.setString(3, bookRes.getDepartureAirport1());
+				rs = statement.executeQuery();
+				rs.next();
+				int legNo = rs.getInt("LegNo");
+				
+				String includesDate = bookRes.getTrip1Date();
+				includesDate = includesDate.trim();
+				String month = includesDate.substring(0, 2);
+				String day = includesDate.substring(3, 5);
+				String year = includesDate.substring(6, 10);
+				includesDate = year + "-" + month + "-" + day;
+				Date includesNewDate=Date.valueOf(includesDate);
+				statement = con.prepareStatement("INSERT INTO Includes(ResrNo, AirlineID, FlightNo, LegNo, Date) VALUES(?,?,?,?,?);");
+				statement.setInt(1, resrNo);
+				statement.setString(2, bookRes.getAirlineID());
+				statement.setInt(3, bookRes.getFlightNum1());
+				statement.setInt(4, legNo);
+				statement.setDate(5, includesNewDate);
+				statement.executeUpdate();
+				
+				statement = con.prepareStatement("SELECT * FROM Leg WHERE AirlineID = ? AND FlightNo = ? AND DepAirportID = ?;");
+				statement.setString(1, bookRes.getAirlineID());
+				statement.setInt(2, bookRes.getFlightNum2());
+				statement.setString(3, bookRes.getDepartureAirport2());
+				rs = statement.executeQuery();
+				rs.next();
+				int legNo2 = rs.getInt("LegNo");
+				
+				String includesDate2 = bookRes.getTrip2Date();
+				includesDate2 = includesDate2.trim();
+				String month2 = includesDate2.substring(0, 2);
+				String day2 = includesDate2.substring(3, 5);
+				String year2 = includesDate2.substring(6, 10);
+				includesDate2 = year2 + "-" + month2 + "-" + day2;
+				Date includesNewDate2=Date.valueOf(includesDate2);
+				statement = con.prepareStatement("INSERT INTO Includes(ResrNo, AirlineID, FlightNo, LegNo, Date) VALUES(?,?,?,?,?);");
+				statement.setInt(1, resrNo);
+				statement.setString(2, bookRes.getAirlineID());
+				statement.setInt(3, bookRes.getFlightNum2());
+				statement.setInt(4, legNo2);
+				statement.setDate(5, includesNewDate2);
+				statement.executeUpdate();
+			}
+			else {
+				statement = con.prepareStatement("INSERT INTO Reservation(ResrNo, ResrDate, BookingFee, TotalFare, RepSSN, AccountNo) VALUES(?,?,?,?,?,?);");
+				statement.setInt(1, resrNo);
+				long d = System.currentTimeMillis();
+				Date date = new Date(d);
+				statement.setDate(2, date);
+				statement.setDouble(3, bookingFee);
+				statement.setDouble(4, totalFare);
+				statement.setString(5, repSSN);
+				statement.setInt(6, accountNo);
+				statement.executeUpdate();
+				
+				statement = con.prepareStatement("SELECT * FROM Leg WHERE AirlineID = ? AND FlightNo = ? AND DepAirportID = ?;");
+				statement.setString(1, bookRes.getAirlineID());
+				statement.setInt(2, bookRes.getFlightNum1());
+				statement.setString(3, bookRes.getDepartureAirport1());
+				rs = statement.executeQuery();
+				rs.next();
+				int legNo = rs.getInt("LegNo");
+				
+				String includesDate = bookRes.getTrip1Date();
+				includesDate = includesDate.trim();
+				String month = includesDate.substring(0, 2);
+				String day = includesDate.substring(3, 5);
+				String year = includesDate.substring(6, 10);
+				includesDate = year + "-" + month + "-" + day;
+				Date includesNewDate=Date.valueOf(includesDate);
+				statement = con.prepareStatement("INSERT INTO Includes(ResrNo, AirlineID, FlightNo, LegNo, Date) VALUES(?,?,?,?,?);");
+				statement.setInt(1, resrNo);
+				statement.setString(2, bookRes.getAirlineID());
+				statement.setInt(3, bookRes.getFlightNum1());
+				statement.setInt(4, legNo);
+				statement.setDate(5, includesNewDate);
+				statement.executeUpdate();
+				
+				statement = con.prepareStatement("SELECT * FROM Leg WHERE AirlineID = ? AND FlightNo = ? AND DepAirportID = ?;");
+				statement.setString(1, bookRes.getAirlineID());
+				statement.setInt(2, bookRes.getFlightNum2());
+				statement.setString(3, bookRes.getDepartureAirport2());
+				rs = statement.executeQuery();
+				rs.next();
+				int legNo2 = rs.getInt("LegNo");
+				
+				String includesDate2 = bookRes.getTrip2Date();
+				includesDate2 = includesDate2.trim();
+				String month2 = includesDate2.substring(0, 2);
+				String day2 = includesDate2.substring(3, 5);
+				String year2 = includesDate2.substring(6, 10);
+				includesDate2 = year2 + "-" + month2 + "-" + day2;
+				Date includesNewDate2=Date.valueOf(includesDate2);
+				statement = con.prepareStatement("INSERT INTO Includes(ResrNo, AirlineID, FlightNo, LegNo, Date) VALUES(?,?,?,?,?);");
+				statement.setInt(1, resrNo);
+				statement.setString(2, bookRes.getAirlineID());
+				statement.setInt(3, bookRes.getFlightNum2());
+				statement.setInt(4, legNo2);
+				statement.setDate(5, includesNewDate2);
+				statement.executeUpdate();
+			}
+			
+			statement = con.prepareStatement("SELECT * FROM Passenger WHERE Id = ? AND AccountNo = ?");
+			statement.setInt(1, customerID);
+			statement.setInt(2, accountNo);
+			rs = statement.executeQuery();
+			if(!rs.next()) {
+				statement = con.prepareStatement("INSERT INTO Passenger(Id, AccountNo) VALUES(?,?);");
+				statement.setInt(1, customerID);
+				statement.setInt(2, accountNo);
+				statement.executeUpdate();
+			}
+			
+			statement = con.prepareStatement("INSERT INTO ReservationPassenger(ResrNo, Id, AccountNo, SeatNo, Class, Meal) VALUES(?,?,?,?,?,?);");
+			statement.setInt(1, resrNo);
+			statement.setInt(2, customerID);
+			statement.setInt(3, accountNo);
+			statement.setString(4, bookRes.getSeatNum());
+			statement.setString(5, bookRes.getSeatClass());
+			statement.setString(6, bookRes.getMealPref());
+			statement.executeUpdate();
+			
+			return "success";
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			return "failure";
+		}
 	}
 }
